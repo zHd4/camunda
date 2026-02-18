@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.camunda.client.api.command.ClientException;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep3;
+import io.camunda.client.api.command.enums.TenantFilter;
 import io.camunda.client.api.response.StreamJobsResponse;
 import io.camunda.client.util.ClientTest;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.ActivatedJob;
@@ -203,6 +204,38 @@ public final class StreamJobsTest extends ClientTest {
         .isEqualTo(client.getConfiguration().getDefaultJobTimeout().toMillis());
     assertThat(request.getWorker()).isEqualTo(client.getConfiguration().getDefaultJobWorkerName());
     assertThat(request.getFetchVariableList()).isEmpty();
+  }
+
+  @Test
+  public void shouldSetTenantFilter() {
+    // given
+    client
+        .newStreamJobsCommand()
+        .jobType("foo")
+        .consumer(ignored -> {})
+        .tenantFilter(TenantFilter.ASSIGNED)
+        .send()
+        .join();
+
+    // when
+    final StreamActivatedJobsRequest request = gatewayService.getLastRequest();
+
+    // then
+    assertThat(request.getTenantFilter())
+        .isEqualTo(io.camunda.zeebe.gateway.protocol.GatewayOuterClass.TenantFilter.ASSIGNED);
+  }
+
+  @Test
+  public void shouldSetProvidedTenantFilterByDefault() {
+    // given
+    client.newStreamJobsCommand().jobType("foo").consumer(ignored -> {}).send().join();
+
+    // when
+    final StreamActivatedJobsRequest request = gatewayService.getLastRequest();
+
+    // then
+    assertThat(request.getTenantFilter())
+        .isEqualTo(io.camunda.zeebe.gateway.protocol.GatewayOuterClass.TenantFilter.PROVIDED);
   }
 
   @Test

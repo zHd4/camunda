@@ -15,6 +15,7 @@
  */
 package io.camunda.client.api.command;
 
+import io.camunda.client.api.command.enums.TenantFilter;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.StreamJobsResponse;
 import java.time.Duration;
@@ -102,5 +103,18 @@ public interface StreamJobsCommandStep1 {
      *     it to the broker.
      */
     StreamJobsCommandStep3 fetchVariables(String... fetchVariables);
+
+    /**
+     * Sets the tenant filtering strategy to apply to this stream jobs request.
+     *
+     * <p>If set to {@link TenantFilter#PROVIDED}, the provided tenant IDs are used. If set to
+     * {@link TenantFilter#ASSIGNED}, the tenants assigned to the authenticated principal are
+     * used.
+     *
+     * @param tenantFilter the tenant filtering strategy
+     * @return the builder for this command. Call {@link #send()} to complete the command and send
+     *     it to the broker.
+     */
+    StreamJobsCommandStep3 tenantFilter(TenantFilter tenantFilter);
   }
 }

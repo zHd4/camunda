@@ -23,6 +23,7 @@ import io.camunda.client.api.command.FinalCommandStep;
 import io.camunda.client.api.command.StreamJobsCommandStep1;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep2;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep3;
+import io.camunda.client.api.command.enums.TenantFilter;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.StreamJobsResponse;
 import io.camunda.client.impl.RetriableStreamingFutureImpl;
@@ -72,6 +73,7 @@ public final class StreamJobsCommandImpl
 
     defaultTenantIds = new HashSet<>(config.getDefaultJobWorkerTenantIds());
     customTenantIds = new HashSet<>();
+    tenantFilter(defaultTenantIds.isEmpty() ? TenantFilter.ASSIGNED : TenantFilter.PROVIDED);
   }
 
   @Override
@@ -164,6 +166,26 @@ public final class StreamJobsCommandImpl
   @Override
   public StreamJobsCommandStep3 tenantIds(final String... tenantIds) {
     return tenantIds(Arrays.asList(tenantIds));
+  }
+
+  @Override
+  public StreamJobsCommandStep3 tenantFilter(final TenantFilter tenantFilter) {
+    builder.setTenantFilter(mapTenantFilter(tenantFilter));
+    return this;
+  }
+
+  private io.camunda.zeebe.gateway.protocol.GatewayOuterClass.TenantFilter mapTenantFilter(
+      final TenantFilter tenantFilter) {
+    Objects.requireNonNull(tenantFilter, "must specify a tenant filter");
+
+    switch (tenantFilter) {
+      case ASSIGNED:
+        return io.camunda.zeebe.gateway.protocol.GatewayOuterClass.TenantFilter.ASSIGNED;
+      case PROVIDED:
+        return io.camunda.zeebe.gateway.protocol.GatewayOuterClass.TenantFilter.PROVIDED;
+      default:
+        throw new IllegalArgumentException("Unknown tenant filter: " + tenantFilter);
+    }
   }
 
   private void consumeJob(final GatewayOuterClass.ActivatedJob job) {

@@ -116,6 +116,7 @@ final class JobStreamImplTest {
             .addFetchVariable("foo")
             .addFetchVariable("bar")
             .addTenantIds("test-tenant")
+            .setTenantFilter(GatewayOuterClass.TenantFilter.PROVIDED)
             .build();
 
     // when
@@ -197,6 +198,30 @@ final class JobStreamImplTest {
     assertThat(recreatedStream).isNotNull().isNotEqualTo(initialStream);
     assertThat(initialStream.isCancelled()).isTrue();
     assertThat(recreatedStream.isCancelled()).isFalse();
+  }
+
+
+  @Test
+  void shouldUseAssignedTenantFilterWhenNoTenantIdsProvided() {
+    // given
+    jobStreamer =
+        new JobStreamerImpl(
+            client,
+            "type",
+            "worker",
+            Duration.ofSeconds(10),
+            Arrays.asList("foo", "bar"),
+            java.util.Collections.emptyList(),
+            Duration.ofHours(8),
+            ignored -> 10_000L,
+            scheduler);
+
+    // when
+    jobStreamer.openStreamer(ignored -> {});
+
+    // then
+    assertThat(service.lastRequest().getTenantFilter())
+        .isEqualTo(GatewayOuterClass.TenantFilter.ASSIGNED);
   }
 
   private JobStreamerImpl createStreamer(final Duration streamingTimeout) {

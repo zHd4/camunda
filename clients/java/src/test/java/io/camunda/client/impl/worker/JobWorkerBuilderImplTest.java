@@ -30,6 +30,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.ActivateJobsCommandStep1.ActivateJobsCommandStep3;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep3;
+import io.camunda.client.api.command.enums.TenantFilter;
 import io.camunda.client.api.response.ActivateJobsResponse;
 import io.camunda.client.api.worker.JobClient;
 import io.camunda.client.api.worker.JobWorkerBuilderStep1.JobWorkerBuilderStep3;
@@ -148,6 +149,7 @@ class JobWorkerBuilderImplTest {
     Mockito.when(jobClient.newStreamJobsCommand().jobType(anyString()).consumer(any()))
         .thenReturn(lastStep);
     Mockito.when(lastStep.tenantIds(anyList())).thenReturn(lastStep);
+    Mockito.when(lastStep.tenantFilter(any())).thenReturn(lastStep);
     Mockito.when(lastStep.send()).thenReturn(Mockito.mock());
 
     // when
@@ -238,6 +240,9 @@ class JobWorkerBuilderImplTest {
     @SuppressWarnings("unchecked")
     final ArgumentCaptor<List<String>> tenantIdCaptor = ArgumentCaptor.forClass(List.class);
     Mockito.when(lastStep.tenantIds(tenantIdCaptor.capture())).thenReturn(lastStep);
+    final ArgumentCaptor<TenantFilter> tenantFilterCaptor =
+        ArgumentCaptor.forClass(TenantFilter.class);
+    Mockito.when(lastStep.tenantFilter(tenantFilterCaptor.capture())).thenReturn(lastStep);
     Mockito.when(lastStep.send()).thenReturn(Mockito.mock());
 
     // when
@@ -255,6 +260,7 @@ class JobWorkerBuilderImplTest {
         () ->
             assertThat(tenantIdCaptor.getValue())
                 .containsOnly(zeebeClientConfig.getDefaultTenantId()));
+    assertThat(tenantFilterCaptor.getValue()).isEqualTo(TenantFilter.PROVIDED);
   }
 
   @Test
@@ -266,6 +272,9 @@ class JobWorkerBuilderImplTest {
     @SuppressWarnings("unchecked")
     final ArgumentCaptor<List<String>> tenantIdCaptor = ArgumentCaptor.forClass(List.class);
     Mockito.when(lastStep.tenantIds(tenantIdCaptor.capture())).thenReturn(lastStep);
+    final ArgumentCaptor<TenantFilter> tenantFilterCaptor =
+        ArgumentCaptor.forClass(TenantFilter.class);
+    Mockito.when(lastStep.tenantFilter(tenantFilterCaptor.capture())).thenReturn(lastStep);
     Mockito.when(lastStep.send()).thenReturn(Mockito.mock());
 
     // when
@@ -284,6 +293,7 @@ class JobWorkerBuilderImplTest {
     // then
     await(
         () -> assertThat(tenantIdCaptor.getValue()).containsExactlyInAnyOrder("1", "2", "3", "4"));
+    assertThat(tenantFilterCaptor.getValue()).isEqualTo(TenantFilter.PROVIDED);
   }
 
   private void await(final ThrowingRunnable throwingRunnable) {
