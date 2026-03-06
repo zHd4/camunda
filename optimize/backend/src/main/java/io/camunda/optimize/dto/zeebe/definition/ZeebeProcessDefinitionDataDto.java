@@ -80,7 +80,7 @@ public class ZeebeProcessDefinitionDataDto implements ProcessMetadataValue {
   public String getProcessName() {
     return this.processName;
   }
-  
+
   public void setResource(final byte[] resource) {
     this.resource = resource;
   }
@@ -112,7 +112,7 @@ public class ZeebeProcessDefinitionDataDto implements ProcessMetadataValue {
   public void setVersionTag(final String versionTag) {
     this.versionTag = versionTag;
   }
-  
+
   public void setProcessName(final String processName) {
     this.processName = processName;
   }
@@ -174,4 +174,3 @@ public class ZeebeProcessDefinitionDataDto implements ProcessMetadataValue {
     return other instanceof ZeebeProcessDefinitionDataDto;
   }
 }
-
