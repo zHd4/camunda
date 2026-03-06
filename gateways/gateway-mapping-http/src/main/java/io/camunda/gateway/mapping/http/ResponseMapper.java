@@ -488,7 +488,8 @@ public final class ResponseMapper {
                     .processDefinitionVersion(process.getVersion())
                     .processDefinitionKey(KeyUtil.keyToString(process.getProcessDefinitionKey()))
                     .tenantId(process.getTenantId())
-                    .resourceName(process.getResourceName()))
+                    .resourceName(process.getResourceName())
+                    .processName(process.getProcessName()))
         .map(
             deploymentProcess ->
                 new DeploymentMetadataResult().processDefinition(deploymentProcess))
