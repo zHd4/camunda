@@ -27,13 +27,16 @@ public final class ProcessImpl implements Process {
   private final String resourceName;
   private final String tenantId;
 
+  private String processName;
+
   public ProcessImpl(final ProcessMetadata process) {
     this(
         process.getProcessDefinitionKey(),
         process.getBpmnProcessId(),
         process.getVersion(),
         process.getResourceName(),
-        process.getTenantId());
+        process.getTenantId(),
+        process.getProcessName());
   }
 
   public ProcessImpl(
@@ -44,6 +47,22 @@ public final class ProcessImpl implements Process {
       final String tenantId) {
     this.processDefinitionKey = processDefinitionKey;
     this.bpmnProcessId = bpmnProcessId;
+    this.version = version;
+    this.resourceName = resourceName;
+    this.tenantId = tenantId;
+  }
+
+  // TODO: Refactor
+  public ProcessImpl(
+      final long processDefinitionKey,
+      final String bpmnProcessId,
+      final int version,
+      final String resourceName,
+      final String tenantId,
+      final String processName) {
+    this.processDefinitionKey = processDefinitionKey;
+    this.bpmnProcessId = bpmnProcessId;
+    this.processName = processName;
     this.version = version;
     this.resourceName = resourceName;
     this.tenantId = tenantId;
@@ -75,8 +94,14 @@ public final class ProcessImpl implements Process {
   }
 
   @Override
+  public String getProcessName() {
+    return processName;
+  }
+
+  @Override
   public int hashCode() {
-    return Objects.hash(processDefinitionKey, bpmnProcessId, version, resourceName, tenantId);
+    return Objects.hash(
+        processDefinitionKey, bpmnProcessId, version, resourceName, tenantId, processName);
   }
 
   @Override
@@ -92,7 +117,8 @@ public final class ProcessImpl implements Process {
         && version == process.version
         && Objects.equals(bpmnProcessId, process.bpmnProcessId)
         && Objects.equals(resourceName, process.resourceName)
-        && Objects.equals(tenantId, process.tenantId);
+        && Objects.equals(tenantId, process.tenantId)
+        && Objects.equals(processName, process.processName);
   }
 
   @Override
@@ -110,6 +136,9 @@ public final class ProcessImpl implements Process {
         + '\''
         + ", tenantId='"
         + tenantId
+        + '\''
+        + ", processName='"
+        + processName
         + '\''
         + '}';
   }
