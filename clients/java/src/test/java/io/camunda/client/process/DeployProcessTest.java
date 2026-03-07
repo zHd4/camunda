@@ -221,6 +221,8 @@ public final class DeployProcessTest extends ClientTest {
     final long key = 345L;
     final String filename1 = BPMN_1_FILENAME.substring(1);
     final String filename2 = BPMN_2_FILENAME.substring(1);
+    final String processName1 = "";
+    final String processName2 = "";
     gatewayService.onDeployProcessRequest(
         key,
         deployedProcess(BPMN_1_PROCESS_ID, 1, 1, filename1),
@@ -239,8 +241,10 @@ public final class DeployProcessTest extends ClientTest {
     assertThat(response.getKey()).isEqualTo(key);
     assertThat(response.getProcesses())
         .containsExactly(
-            new ProcessImpl(1, BPMN_1_PROCESS_ID, 1, filename1, DEFAULT_TENANT_IDENTIFIER, ""),
-            new ProcessImpl(2, BPMN_2_PROCESS_ID, 1, filename2, DEFAULT_TENANT_IDENTIFIER, ""));
+            new ProcessImpl(
+                1, BPMN_1_PROCESS_ID, 1, filename1, DEFAULT_TENANT_IDENTIFIER, processName1),
+            new ProcessImpl(
+                2, BPMN_2_PROCESS_ID, 1, filename2, DEFAULT_TENANT_IDENTIFIER, processName2));
   }
 
   @Test
