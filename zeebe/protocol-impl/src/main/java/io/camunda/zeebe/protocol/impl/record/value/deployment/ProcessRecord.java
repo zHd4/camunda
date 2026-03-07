@@ -129,6 +129,11 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
     return this;
   }
 
+  public ProcessRecord setProcessName(final DirectBuffer processName) {
+    processNameProp.setValue(processName);
+    return this;
+  }
+
   public ProcessRecord setResourceName(final String resourceName) {
     resourceNameProp.setValue(resourceName);
     return this;
