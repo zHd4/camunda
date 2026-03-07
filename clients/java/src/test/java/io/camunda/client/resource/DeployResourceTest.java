@@ -236,7 +236,7 @@ public final class DeployResourceTest extends ClientTest {
     assertThat(response.getKey()).isEqualTo(key);
     assertThat(response.getTenantId()).isEqualTo(tenantId);
     assertThat(response.getProcesses())
-        .containsExactly(new ProcessImpl(423, BPMN_1_PROCESS_ID, 12, filename, tenantId));
+        .containsExactly(new ProcessImpl(423, BPMN_1_PROCESS_ID, 12, filename, tenantId, ""));
   }
 
   @Test
@@ -266,8 +266,8 @@ public final class DeployResourceTest extends ClientTest {
     assertThat(response.getKey()).isEqualTo(key);
     assertThat(response.getProcesses())
         .containsExactly(
-            new ProcessImpl(1, BPMN_1_PROCESS_ID, 1, filename1, tenantId),
-            new ProcessImpl(2, BPMN_2_PROCESS_ID, 1, filename2, tenantId));
+            new ProcessImpl(1, BPMN_1_PROCESS_ID, 1, filename1, tenantId, ""),
+            new ProcessImpl(2, BPMN_2_PROCESS_ID, 1, filename2, tenantId, ""));
   }
 
   @Test
