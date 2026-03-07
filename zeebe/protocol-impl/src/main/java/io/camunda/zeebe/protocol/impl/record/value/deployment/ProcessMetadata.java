@@ -127,6 +127,11 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
     return this;
   }
 
+  public ProcessMetadata setProcessName(final DirectBuffer processName) {
+    processNameProp.setValue(processName);
+    return this;
+  }
+
   public ProcessMetadata setResourceName(final String resourceName) {
     resourceNameProp.setValue(resourceName);
     return this;
