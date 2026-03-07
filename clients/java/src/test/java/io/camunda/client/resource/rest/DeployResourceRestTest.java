@@ -229,7 +229,7 @@ public class DeployResourceRestTest extends ClientRestTest {
                             .processDefinitionKey("423")
                             .tenantId(tenantId)
                             .resourceName(filename)
-                            .processName("Demo Process"))));
+                            .processName(processName))));
 
     // when
     final DeploymentEvent response =
@@ -255,6 +255,8 @@ public class DeployResourceRestTest extends ClientRestTest {
     final String tenantId = "test-tenant";
     final String filename1 = BPMN_1_FILENAME.substring(1);
     final String filename2 = BPMN_2_FILENAME.substring(1);
+    final String processName1 = "Demo Process 1";
+    final String processName2 = "Demo Process 2";
     gatewayService.onDeploymentsRequest(
         new DeploymentResult()
             .deploymentKey(key)
@@ -267,6 +269,7 @@ public class DeployResourceRestTest extends ClientRestTest {
                             .processDefinitionVersion(1)
                             .processDefinitionKey("1")
                             .tenantId(tenantId)
+                            .processName(processName1)
                             .resourceName(filename1)))
             .addDeploymentsItem(
                 new DeploymentMetadataResult()
@@ -277,7 +280,7 @@ public class DeployResourceRestTest extends ClientRestTest {
                             .processDefinitionKey("2")
                             .tenantId(tenantId)
                             .resourceName(filename2)
-                            .processName(""))));
+                            .processName(processName2))));
 
     // when
     final DeploymentEvent response =
@@ -293,8 +296,8 @@ public class DeployResourceRestTest extends ClientRestTest {
     assertThat(String.valueOf(response.getKey())).isEqualTo(key);
     assertThat(response.getProcesses())
         .containsExactly(
-            new ProcessImpl(1, BPMN_1_PROCESS_ID, 1, filename1, tenantId, null),
-            new ProcessImpl(2, BPMN_2_PROCESS_ID, 1, filename2, tenantId, ""));
+            new ProcessImpl(1, BPMN_1_PROCESS_ID, 1, filename1, tenantId, processName1),
+            new ProcessImpl(2, BPMN_2_PROCESS_ID, 1, filename2, tenantId, processName2));
   }
 
   @Test
