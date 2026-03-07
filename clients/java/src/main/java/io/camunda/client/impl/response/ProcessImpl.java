@@ -26,8 +26,7 @@ public final class ProcessImpl implements Process {
   private final int version;
   private final String resourceName;
   private final String tenantId;
-
-  private String processName;
+  private final String processName;
 
   public ProcessImpl(final ProcessMetadata process) {
     this(
@@ -44,28 +43,14 @@ public final class ProcessImpl implements Process {
       final String bpmnProcessId,
       final int version,
       final String resourceName,
-      final String tenantId) {
-    this.processDefinitionKey = processDefinitionKey;
-    this.bpmnProcessId = bpmnProcessId;
-    this.version = version;
-    this.resourceName = resourceName;
-    this.tenantId = tenantId;
-  }
-
-  // TODO: Refactor
-  public ProcessImpl(
-      final long processDefinitionKey,
-      final String bpmnProcessId,
-      final int version,
-      final String resourceName,
       final String tenantId,
       final String processName) {
     this.processDefinitionKey = processDefinitionKey;
     this.bpmnProcessId = bpmnProcessId;
-    this.processName = processName;
     this.version = version;
     this.resourceName = resourceName;
     this.tenantId = tenantId;
+    this.processName = processName;
   }
 
   @Override
